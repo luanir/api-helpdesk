@@ -37,7 +37,7 @@ As configuracoes atuais estao em `src/main/resources/application.properties`:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/helpdesk
 spring.datasource.username=postgres
-spring.datasource.password=luan
+spring.datasource.password=sua_senha
 spring.jpa.hibernate.ddl-auto=update
 ```
 
