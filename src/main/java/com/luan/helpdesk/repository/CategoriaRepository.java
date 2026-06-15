@@ -1,0 +1,13 @@
+package com.luan.helpdesk.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.luan.helpdesk.entity.Categoria;
+
+public interface CategoriaRepository extends JpaRepository <Categoria, Long> {
+	
+	List<Categoria> findByNome(String nome);
+
+}

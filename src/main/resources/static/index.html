@@ -1,0 +1,1677 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Helpdesk</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --surface-soft: #eef3f6;
+      --ink: #1f2933;
+      --muted: #66788a;
+      --line: #d8e0e8;
+      --accent: #0f766e;
+      --accent-strong: #0b5d56;
+      --blue: #2563eb;
+      --danger: #b42318;
+      --warning: #9a5b13;
+      --ok: #117044;
+      --shadow: 0 14px 40px rgba(31, 41, 51, .10);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: #17212b;
+      color: #f8fafc;
+      padding: 22px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: #2dd4bf;
+      color: #102027;
+      font-weight: 800;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 21px;
+      letter-spacing: 0;
+    }
+
+    .brand span {
+      color: #b7c4d1;
+      font-size: 13px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .nav button {
+      width: 100%;
+      min-height: 42px;
+      border-radius: var(--radius);
+      background: transparent;
+      color: #d7e0e8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: rgba(255, 255, 255, .10);
+      color: #ffffff;
+    }
+
+    .nav .mark {
+      width: 22px;
+      min-width: 22px;
+      text-align: center;
+      color: #8ce3d7;
+    }
+
+    .side-box {
+      border-top: 1px solid rgba(255, 255, 255, .14);
+      padding-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .side-box label {
+      color: #c3cfda;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .side-box input {
+      width: 100%;
+      min-height: 40px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, .20);
+      background: rgba(255, 255, 255, .08);
+      color: #ffffff;
+      padding: 9px 10px;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .title h2 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    .title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+    }
+
+    .actions-row,
+    .inline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn,
+    .icon-btn {
+      min-height: 40px;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .btn:hover,
+    .icon-btn:hover {
+      background: var(--accent-strong);
+    }
+
+    .btn.secondary,
+    .icon-btn.secondary {
+      background: #e6edf3;
+      color: #20303f;
+    }
+
+    .btn.secondary:hover,
+    .icon-btn.secondary:hover {
+      background: #d8e2ec;
+    }
+
+    .btn.blue {
+      background: var(--blue);
+    }
+
+    .btn.danger,
+    .icon-btn.danger {
+      background: #fde8e6;
+      color: var(--danger);
+    }
+
+    .icon-btn {
+      width: 40px;
+      padding: 0;
+      font-size: 17px;
+    }
+
+    .notice {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 10px 24px rgba(31, 41, 51, .06);
+      padding: 10px 12px;
+      margin-bottom: 18px;
+    }
+
+    .notice.show {
+      display: flex;
+    }
+
+    .notice.ok {
+      border-color: #abdcbc;
+      color: var(--ok);
+    }
+
+    .notice.error {
+      border-color: #efaca5;
+      color: var(--danger);
+    }
+
+    .notice button {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius);
+      background: #edf2f7;
+      color: inherit;
+      font-weight: 900;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 15px;
+      box-shadow: 0 10px 24px rgba(31, 41, 51, .06);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(315px, 420px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 15px 17px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfd;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .panel-head small {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .panel-body {
+      padding: 17px;
+    }
+
+    form,
+    .form {
+      display: grid;
+      gap: 13px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+      color: var(--ink);
+      padding: 10px 11px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 112px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, .13);
+    }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 190px;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 960px;
+      border-collapse: collapse;
+      background: #ffffff;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--surface-soft);
+      color: #344454;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .empty {
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      background: #fbfcfd;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      border-radius: var(--radius);
+      padding: 3px 8px;
+      background: #edf2f7;
+      color: #344454;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .badge.open {
+      background: #e8f6ef;
+      color: var(--ok);
+    }
+
+    .badge.closed {
+      background: #eceff3;
+      color: #52606d;
+    }
+
+    .badge.hot {
+      background: #fff3e2;
+      color: var(--warning);
+    }
+
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .row-actions .icon-btn {
+      width: 34px;
+      min-height: 34px;
+      height: 34px;
+      font-size: 15px;
+    }
+
+    .comment-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .comment {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+      padding: 13px;
+    }
+
+    .comment header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .comment p {
+      margin: 0 0 11px;
+    }
+
+    .auth-grid {
+      display: grid;
+      grid-template-columns: minmax(310px, 420px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .token-box {
+      min-height: 88px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8fafc;
+      color: #344454;
+      padding: 12px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    .login-state {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .loading {
+      display: none;
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 20;
+      align-items: center;
+      gap: 10px;
+      border-radius: var(--radius);
+      background: #17212b;
+      color: #ffffff;
+      box-shadow: var(--shadow);
+      padding: 11px 14px;
+      font-weight: 800;
+    }
+
+    .loading.show {
+      display: flex;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, .28);
+      border-top-color: #ffffff;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1180px) {
+      .stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid,
+      .auth-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .topbar {
+        flex-direction: column;
+      }
+
+      .stats,
+      .cols,
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .title h2 {
+        font-size: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">HD</div>
+        <div>
+          <h1>Helpdesk</h1>
+          <span>Frontend atualizado</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Navegacao">
+        <button class="active" data-tab="dashboard" type="button"><span class="mark">#</span>Painel</button>
+        <button data-tab="tickets" type="button"><span class="mark">+</span>Chamados</button>
+        <button data-tab="comments" type="button"><span class="mark">"</span>Comentarios</button>
+        <button data-tab="users" type="button"><span class="mark">@</span>Usuarios</button>
+        <button data-tab="categories" type="button"><span class="mark">*</span>Categorias</button>
+        <button data-tab="auth" type="button"><span class="mark">&gt;</span>Login</button>
+      </nav>
+
+      <div class="side-box">
+        <label for="apiBase">Base da API</label>
+        <input id="apiBase" type="url" autocomplete="off" spellcheck="false">
+        <button class="btn secondary" id="applyApiBase" type="button">Aplicar API</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title">
+          <h2 id="pageTitle">Painel</h2>
+          <p id="pageSubtitle">Resumo dos chamados, comentarios e cadastros.</p>
+        </div>
+        <div class="actions-row">
+          <button class="icon-btn secondary" id="refreshAll" title="Atualizar dados" aria-label="Atualizar dados" type="button">&#8635;</button>
+          <button class="btn blue" id="goNewTicket" type="button">Novo chamado</button>
+        </div>
+      </header>
+
+      <div class="notice" id="notice">
+        <span id="noticeText"></span>
+        <button id="closeNotice" type="button" aria-label="Fechar aviso">x</button>
+      </div>
+
+      <section class="section active" id="dashboard">
+        <div class="stats">
+          <div class="stat"><span>Chamados</span><strong id="statTickets">0</strong></div>
+          <div class="stat"><span>Abertos</span><strong id="statOpen">0</strong></div>
+          <div class="stat"><span>Fechados</span><strong id="statClosed">0</strong></div>
+          <div class="stat"><span>Usuarios</span><strong id="statUsers">0</strong></div>
+          <div class="stat"><span>Comentarios</span><strong id="statComments">0</strong></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Chamados recentes</h3>
+            <small id="recentCount">0 itens</small>
+          </div>
+          <div class="panel-body" id="recentTickets"></div>
+        </div>
+      </section>
+
+      <section class="section" id="tickets">
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3 id="ticketFormTitle">Novo chamado</h3>
+              <button class="icon-btn secondary" id="clearTicket" title="Limpar formulario" aria-label="Limpar formulario" type="button">&times;</button>
+            </div>
+            <div class="panel-body">
+              <form id="ticketForm">
+                <input id="ticketId" type="hidden">
+                <div class="field">
+                  <label for="ticketTitle">Titulo</label>
+                  <input id="ticketTitle" required maxlength="120">
+                </div>
+                <div class="field">
+                  <label for="ticketDescription">Descricao</label>
+                  <textarea id="ticketDescription" required maxlength="1000"></textarea>
+                </div>
+                <div class="cols">
+                  <div class="field">
+                    <label for="ticketPriority">Prioridade</label>
+                    <select id="ticketPriority" required>
+                      <option value="BAIXA">Baixa</option>
+                      <option value="MEDIA">Media</option>
+                      <option value="ALTA">Alta</option>
+                      <option value="URGENTE">Urgente</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="ticketCategory">Categoria</label>
+                    <select id="ticketCategory" required></select>
+                  </div>
+                </div>
+                <div class="cols">
+                  <div class="field">
+                    <label for="ticketClient">Cliente</label>
+                    <select id="ticketClient" required></select>
+                  </div>
+                  <div class="field">
+                    <label for="ticketTechnician">Tecnico</label>
+                    <select id="ticketTechnician" required></select>
+                  </div>
+                </div>
+                <button class="btn" id="ticketSubmit" type="submit">Salvar chamado</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Chamados</h3>
+              <small id="ticketCount">0 itens</small>
+            </div>
+            <div class="panel-body">
+              <div class="filters">
+                <input id="ticketSearch" placeholder="Buscar por titulo, cliente, tecnico ou categoria">
+                <select id="ticketStatus">
+                  <option value="">Todos os status</option>
+                  <option value="ABERTO">Aberto</option>
+                  <option value="EM_ANDAMENTO">Em andamento</option>
+                  <option value="RESOLVIDO">Resolvido</option>
+                  <option value="FECHADO">Fechado</option>
+                  <option value="CANCELADO">Cancelado</option>
+                </select>
+              </div>
+              <div id="ticketTable"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="comments">
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3 id="commentFormTitle">Novo comentario</h3>
+              <button class="icon-btn secondary" id="clearComment" title="Limpar formulario" aria-label="Limpar formulario" type="button">&times;</button>
+            </div>
+            <div class="panel-body">
+              <form id="commentForm">
+                <input id="commentId" type="hidden">
+                <div class="field">
+                  <label for="commentTicket">Chamado</label>
+                  <select id="commentTicket" required></select>
+                </div>
+                <div class="field">
+                  <label for="commentUser">Usuario</label>
+                  <select id="commentUser" required></select>
+                </div>
+                <div class="field">
+                  <label for="commentMessage">Mensagem</label>
+                  <textarea id="commentMessage" required maxlength="1000"></textarea>
+                </div>
+                <button class="btn" id="commentSubmit" type="submit">Salvar comentario</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Comentarios</h3>
+              <small id="commentCount">0 itens</small>
+            </div>
+            <div class="panel-body">
+              <div class="filters">
+                <input id="commentSearch" placeholder="Buscar por mensagem, usuario ou chamado">
+                <select id="commentTicketFilter"></select>
+              </div>
+              <div id="commentList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="users">
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3 id="userFormTitle">Novo usuario</h3>
+              <button class="icon-btn secondary" id="clearUser" title="Limpar formulario" aria-label="Limpar formulario" type="button">&times;</button>
+            </div>
+            <div class="panel-body">
+              <form id="userForm">
+                <input id="userId" type="hidden">
+                <div class="field">
+                  <label for="userName">Nome</label>
+                  <input id="userName" required minlength="2" maxlength="120">
+                </div>
+                <div class="field">
+                  <label for="userEmail">Email</label>
+                  <input id="userEmail" required type="email" maxlength="160">
+                </div>
+                <div class="cols">
+                  <div class="field">
+                    <label for="userPassword">Senha</label>
+                    <input id="userPassword" required type="password" minlength="5">
+                  </div>
+                  <div class="field">
+                    <label for="userRole">Perfil</label>
+                    <select id="userRole" required>
+                      <option value="CLIENTE">Cliente</option>
+                      <option value="TECNICO">Tecnico</option>
+                      <option value="ADMIN">Admin</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn" id="userSubmit" type="submit">Salvar usuario</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Usuarios</h3>
+              <small id="userCount">0 itens</small>
+            </div>
+            <div class="panel-body">
+              <div class="filters">
+                <input id="userSearch" placeholder="Buscar por nome ou email">
+                <select id="userRoleFilter">
+                  <option value="">Todos os perfis</option>
+                  <option value="CLIENTE">Cliente</option>
+                  <option value="TECNICO">Tecnico</option>
+                  <option value="ADMIN">Admin</option>
+                </select>
+              </div>
+              <div id="userTable"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="categories">
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3 id="categoryFormTitle">Nova categoria</h3>
+              <button class="icon-btn secondary" id="clearCategory" title="Limpar formulario" aria-label="Limpar formulario" type="button">&times;</button>
+            </div>
+            <div class="panel-body">
+              <form id="categoryForm">
+                <input id="categoryId" type="hidden">
+                <div class="field">
+                  <label for="categoryName">Nome</label>
+                  <input id="categoryName" required maxlength="120">
+                </div>
+                <div class="field">
+                  <label for="categoryDescription">Descricao</label>
+                  <textarea id="categoryDescription" maxlength="600"></textarea>
+                </div>
+                <button class="btn" id="categorySubmit" type="submit">Salvar categoria</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Categorias</h3>
+              <small id="categoryCount">0 itens</small>
+            </div>
+            <div class="panel-body">
+              <div class="filters">
+                <input id="categorySearch" placeholder="Buscar por nome ou descricao">
+                <button class="btn secondary" id="clearCategorySearch" type="button">Limpar</button>
+              </div>
+              <div id="categoryTable"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="auth">
+        <div class="auth-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Login JWT</h3>
+              <button class="icon-btn secondary" id="clearAuth" title="Sair" aria-label="Sair" type="button">&times;</button>
+            </div>
+            <div class="panel-body">
+              <div class="login-state">
+                <span class="badge" id="authBadge">Sem token</span>
+                <button class="btn secondary" id="checkMe" type="button">Verificar /auth/me</button>
+              </div>
+              <form id="loginForm">
+                <div class="field">
+                  <label for="loginEmail">Email</label>
+                  <input id="loginEmail" type="email" required autocomplete="username">
+                </div>
+                <div class="field">
+                  <label for="loginPassword">Senha</label>
+                  <input id="loginPassword" type="password" required autocomplete="current-password">
+                </div>
+                <button class="btn" type="submit">Entrar</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Token usado nas requisicoes</h3>
+              <small id="authEmail">Nao autenticado</small>
+            </div>
+            <div class="panel-body">
+              <div class="token-box" id="tokenBox">Sem token salvo.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="loading" id="loading"><span class="spinner"></span><span>Carregando</span></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const sameOrigin = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+      const defaultApiBase = sameOrigin ? window.location.origin : 'http://localhost:8080';
+      const state = {
+        apiBase: localStorage.getItem('helpdeskApiBase') || defaultApiBase,
+        token: localStorage.getItem('helpdeskToken') || '',
+        authEmail: '',
+        usuarios: [],
+        categorias: [],
+        chamados: [],
+        comentarios: [],
+        busy: 0,
+        activeTab: 'dashboard'
+      };
+
+      const labels = {
+        dashboard: ['Painel', 'Resumo dos chamados, comentarios e cadastros.'],
+        tickets: ['Chamados', 'Criacao, edicao, abertura e fechamento.'],
+        comments: ['Comentarios', 'Registro de historico usando chamadosId na API atualizada.'],
+        users: ['Usuarios', 'Clientes, tecnicos e administradores.'],
+        categories: ['Categorias', 'Classificacao dos chamados.'],
+        auth: ['Login', 'Token JWT para endpoints protegidos.']
+      };
+
+      const $ = (id) => document.getElementById(id);
+      const normalize = (value) => String(value || '').toLowerCase();
+      const asArray = (value) => Array.isArray(value) ? value : [];
+      const countText = (n) => n === 1 ? '1 item' : `${n} itens`;
+      const display = (value) => value === null || value === undefined || value === '' ? '-' : String(value);
+      const toDate = (value) => value ? new Date(value).toLocaleString('pt-BR') : '-';
+      const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      })[char]);
+
+      $('apiBase').value = state.apiBase;
+
+      function endpoint(path) {
+        return `${state.apiBase.replace(/\/+$/, '')}${path.startsWith('/') ? path : `/${path}`}`;
+      }
+
+      function setBusy(on) {
+        state.busy += on ? 1 : -1;
+        state.busy = Math.max(0, state.busy);
+        $('loading').classList.toggle('show', state.busy > 0);
+      }
+
+      function notice(message, type) {
+        $('noticeText').textContent = message;
+        $('notice').className = `notice show ${type || ''}`;
+      }
+
+      function clearNotice() {
+        $('notice').className = 'notice';
+        $('noticeText').textContent = '';
+      }
+
+      function explainError(error) {
+        const message = error && error.message ? error.message : 'Erro inesperado.';
+        if (message.includes('403')) {
+          return 'A API recusou a acao. Faca login com um usuario autorizado e tente novamente.';
+        }
+        if (message.includes('401')) {
+          return 'Token ausente ou invalido. Faca login novamente.';
+        }
+        return message;
+      }
+
+      async function api(path, options) {
+        const init = options || {};
+        const headers = new Headers(init.headers || {});
+        headers.set('Accept', 'application/json');
+
+        if (init.body && !(init.body instanceof FormData)) {
+          headers.set('Content-Type', 'application/json');
+        }
+
+        if (state.token) {
+          headers.set('Authorization', `Bearer ${state.token}`);
+        }
+
+        setBusy(true);
+        try {
+          const response = await fetch(endpoint(path), { ...init, headers });
+          const text = await response.text();
+          let data = null;
+
+          if (text) {
+            try {
+              data = JSON.parse(text);
+            } catch (error) {
+              data = text;
+            }
+          }
+
+          if (!response.ok) {
+            const detail = data && typeof data === 'object'
+              ? data.message || data.erro || data.error || JSON.stringify(data)
+              : data;
+            throw new Error(detail || `HTTP ${response.status}`);
+          }
+
+          return data;
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      async function loadAll() {
+        clearNotice();
+        try {
+          const [usuarios, categorias, chamados, comentarios] = await Promise.all([
+            api('/usuarios'),
+            api('/categorias'),
+            api('/chamados'),
+            api('/comentarios')
+          ]);
+
+          state.usuarios = asArray(usuarios);
+          state.categorias = asArray(categorias);
+          state.chamados = asArray(chamados);
+          state.comentarios = asArray(comentarios);
+          syncSelects();
+          renderAll();
+          notice('Dados atualizados.', 'ok');
+        } catch (error) {
+          renderAll();
+          notice(explainError(error), 'error');
+        }
+      }
+
+      function optionList(items, placeholder, label) {
+        const options = [`<option value="">${escapeHtml(placeholder)}</option>`];
+        items.forEach((item) => {
+          options.push(`<option value="${escapeHtml(item.id)}">${escapeHtml(label(item))}</option>`);
+        });
+        return options.join('');
+      }
+
+      function syncSelects() {
+        const clientes = state.usuarios.filter((user) => user.role !== 'TECNICO');
+        const tecnicos = state.usuarios.filter((user) => user.role !== 'CLIENTE');
+        const clientItems = clientes.length ? clientes : state.usuarios;
+        const techItems = tecnicos.length ? tecnicos : state.usuarios;
+
+        $('ticketCategory').innerHTML = optionList(state.categorias, 'Selecione a categoria', (item) => `${item.id} - ${item.nome}`);
+        $('ticketClient').innerHTML = optionList(clientItems, 'Selecione o cliente', (item) => `${item.id} - ${item.nome}`);
+        $('ticketTechnician').innerHTML = optionList(techItems, 'Selecione o tecnico', (item) => `${item.id} - ${item.nome}`);
+        $('commentTicket').innerHTML = optionList(state.chamados, 'Selecione o chamado', (item) => `${item.id} - ${item.titulo}`);
+        $('commentUser').innerHTML = optionList(state.usuarios, 'Selecione o usuario', (item) => `${item.id} - ${item.nome}`);
+        $('commentTicketFilter').innerHTML = [
+          '<option value="">Todos os chamados</option>',
+          ...state.chamados.map((item) => `<option value="${escapeHtml(item.id)}">#${escapeHtml(item.id)} ${escapeHtml(item.titulo)}</option>`)
+        ].join('');
+
+        updateFormAvailability();
+      }
+
+      function updateFormAvailability() {
+        const canTicket = state.usuarios.length > 0 && state.categorias.length > 0;
+        const canComment = state.usuarios.length > 0 && state.chamados.length > 0;
+        $('ticketSubmit').disabled = !canTicket;
+        $('commentSubmit').disabled = !canComment;
+
+        if (!canTicket) {
+          $('ticketSubmit').textContent = 'Cadastre usuario e categoria';
+        } else {
+          $('ticketSubmit').textContent = $('ticketId').value ? 'Atualizar chamado' : 'Salvar chamado';
+        }
+
+        if (!canComment) {
+          $('commentSubmit').textContent = 'Cadastre usuario e chamado';
+        } else {
+          $('commentSubmit').textContent = $('commentId').value ? 'Atualizar comentario' : 'Salvar comentario';
+        }
+      }
+
+      function renderAll() {
+        renderAuth();
+        renderDashboard();
+        renderTickets();
+        renderComments();
+        renderUsers();
+        renderCategories();
+        updateFormAvailability();
+      }
+
+      function renderAuth() {
+        $('authBadge').textContent = state.token ? 'Token salvo' : 'Sem token';
+        $('authBadge').className = state.token ? 'badge open' : 'badge';
+        $('authEmail').textContent = state.authEmail || (state.token ? 'Token carregado' : 'Nao autenticado');
+        $('tokenBox').textContent = state.token || 'Sem token salvo.';
+      }
+
+      function renderDashboard() {
+        const openStatuses = new Set(['ABERTO', 'EM_ANDAMENTO']);
+        const closedStatuses = new Set(['FECHADO', 'RESOLVIDO', 'CANCELADO']);
+        const recent = [...state.chamados]
+          .sort((a, b) => new Date(b.dataAbertura || 0) - new Date(a.dataAbertura || 0))
+          .slice(0, 7);
+
+        $('statTickets').textContent = state.chamados.length;
+        $('statOpen').textContent = state.chamados.filter((item) => openStatuses.has(item.status)).length;
+        $('statClosed').textContent = state.chamados.filter((item) => closedStatuses.has(item.status)).length;
+        $('statUsers').textContent = state.usuarios.length;
+        $('statComments').textContent = state.comentarios.length;
+        $('recentCount').textContent = countText(recent.length);
+        $('recentTickets').innerHTML = ticketTable(recent, false);
+      }
+
+      function ticketBadge(status) {
+        return status === 'FECHADO' || status === 'RESOLVIDO' || status === 'CANCELADO' ? 'closed' : 'open';
+      }
+
+      function priorityBadge(priority) {
+        return priority === 'ALTA' || priority === 'URGENTE' ? 'hot' : '';
+      }
+
+      function ticketTable(items, actions) {
+        if (!items.length) {
+          return '<div class="empty">Nenhum chamado encontrado.</div>';
+        }
+
+        const rows = items.map((ticket) => `
+          <tr>
+            <td><strong>#${escapeHtml(ticket.id)}</strong></td>
+            <td><strong>${escapeHtml(ticket.titulo)}</strong><br><span class="muted">${escapeHtml(ticket.descricao)}</span></td>
+            <td><span class="badge ${ticketBadge(ticket.status)}">${escapeHtml(display(ticket.status))}</span></td>
+            <td><span class="badge ${priorityBadge(ticket.prioridade)}">${escapeHtml(display(ticket.prioridade))}</span></td>
+            <td>${escapeHtml(display(ticket.clienteNome))}</td>
+            <td>${escapeHtml(display(ticket.tecnicoNome))}</td>
+            <td>${escapeHtml(display(ticket.categoriaNome))}</td>
+            <td>${escapeHtml(toDate(ticket.dataAbertura))}</td>
+            <td>${escapeHtml(toDate(ticket.dataFechamento))}</td>
+            ${actions ? `<td>
+              <div class="row-actions">
+                <button class="icon-btn secondary" data-action="edit-ticket" data-id="${escapeHtml(ticket.id)}" title="Editar chamado" aria-label="Editar chamado" type="button">&#9998;</button>
+                <button class="icon-btn secondary" data-action="toggle-ticket" data-id="${escapeHtml(ticket.id)}" data-status="${escapeHtml(ticket.status)}" title="${ticket.status === 'FECHADO' ? 'Abrir chamado' : 'Fechar chamado'}" aria-label="${ticket.status === 'FECHADO' ? 'Abrir chamado' : 'Fechar chamado'}" type="button">${ticket.status === 'FECHADO' ? '&#8613;' : '&#10003;'}</button>
+                <button class="icon-btn danger" data-action="delete-ticket" data-id="${escapeHtml(ticket.id)}" title="Excluir chamado" aria-label="Excluir chamado" type="button">&minus;</button>
+              </div>
+            </td>` : ''}
+          </tr>
+        `).join('');
+
+        return `
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Titulo</th>
+                  <th>Status</th>
+                  <th>Prioridade</th>
+                  <th>Cliente</th>
+                  <th>Tecnico</th>
+                  <th>Categoria</th>
+                  <th>Abertura</th>
+                  <th>Fechamento</th>
+                  ${actions ? '<th>Acoes</th>' : ''}
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      function filteredTickets() {
+        const query = normalize($('ticketSearch').value);
+        const status = $('ticketStatus').value;
+        return state.chamados.filter((ticket) => {
+          const haystack = normalize([
+            ticket.titulo,
+            ticket.descricao,
+            ticket.status,
+            ticket.prioridade,
+            ticket.clienteNome,
+            ticket.tecnicoNome,
+            ticket.categoriaNome
+          ].join(' '));
+          return (!query || haystack.includes(query)) && (!status || ticket.status === status);
+        });
+      }
+
+      function renderTickets() {
+        const items = filteredTickets();
+        $('ticketCount').textContent = countText(items.length);
+        $('ticketTable').innerHTML = ticketTable(items, true);
+      }
+
+      function renderComments() {
+        const query = normalize($('commentSearch').value);
+        const ticketId = $('commentTicketFilter').value;
+        const items = state.comentarios.filter((comment) => {
+          const chamadoId = comment.chamadoId || comment.chamadosId;
+          const ticket = state.chamados.find((item) => String(item.id) === String(chamadoId));
+          const haystack = normalize(`${comment.mensagem} ${comment.usuarioNome} ${ticket ? ticket.titulo : ''}`);
+          return (!query || haystack.includes(query)) && (!ticketId || String(chamadoId) === String(ticketId));
+        });
+
+        $('commentCount').textContent = countText(items.length);
+
+        if (!items.length) {
+          $('commentList').innerHTML = '<div class="empty">Nenhum comentario encontrado.</div>';
+          return;
+        }
+
+        $('commentList').innerHTML = `<div class="comment-list">${items.map((comment) => {
+          const chamadoId = comment.chamadoId || comment.chamadosId;
+          const ticket = state.chamados.find((item) => String(item.id) === String(chamadoId));
+          return `
+            <article class="comment">
+              <header>
+                <span>#${escapeHtml(comment.id)} &middot; ${escapeHtml(display(comment.usuarioNome))}</span>
+                <span>${escapeHtml(toDate(comment.dataComentario))}</span>
+              </header>
+              <p>${escapeHtml(comment.mensagem)}</p>
+              <div class="row-actions">
+                <span class="badge">Chamado ${escapeHtml(display(chamadoId))}${ticket ? ` - ${escapeHtml(ticket.titulo)}` : ''}</span>
+                <button class="icon-btn secondary" data-action="edit-comment" data-id="${escapeHtml(comment.id)}" title="Editar comentario" aria-label="Editar comentario" type="button">&#9998;</button>
+                <button class="icon-btn danger" data-action="delete-comment" data-id="${escapeHtml(comment.id)}" title="Excluir comentario" aria-label="Excluir comentario" type="button">&minus;</button>
+              </div>
+            </article>
+          `;
+        }).join('')}</div>`;
+      }
+
+      function renderUsers() {
+        const query = normalize($('userSearch').value);
+        const role = $('userRoleFilter').value;
+        const items = state.usuarios.filter((user) => {
+          const haystack = normalize(`${user.nome} ${user.email} ${user.role}`);
+          return (!query || haystack.includes(query)) && (!role || user.role === role);
+        });
+
+        $('userCount').textContent = countText(items.length);
+
+        if (!items.length) {
+          $('userTable').innerHTML = '<div class="empty">Nenhum usuario encontrado.</div>';
+          return;
+        }
+
+        const rows = items.map((user) => `
+          <tr>
+            <td><strong>#${escapeHtml(user.id)}</strong></td>
+            <td>${escapeHtml(user.nome)}</td>
+            <td>${escapeHtml(user.email)}</td>
+            <td><span class="badge">${escapeHtml(user.role)}</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="icon-btn secondary" data-action="edit-user" data-id="${escapeHtml(user.id)}" title="Editar usuario" aria-label="Editar usuario" type="button">&#9998;</button>
+                <button class="icon-btn danger" data-action="delete-user" data-id="${escapeHtml(user.id)}" title="Excluir usuario" aria-label="Excluir usuario" type="button">&minus;</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+        $('userTable').innerHTML = `
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Perfil</th><th>Acoes</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      function renderCategories() {
+        const query = normalize($('categorySearch').value);
+        const items = state.categorias.filter((category) => {
+          const haystack = normalize(`${category.nome} ${category.descricao}`);
+          return !query || haystack.includes(query);
+        });
+
+        $('categoryCount').textContent = countText(items.length);
+
+        if (!items.length) {
+          $('categoryTable').innerHTML = '<div class="empty">Nenhuma categoria encontrada.</div>';
+          return;
+        }
+
+        const rows = items.map((category) => `
+          <tr>
+            <td><strong>#${escapeHtml(category.id)}</strong></td>
+            <td>${escapeHtml(category.nome)}</td>
+            <td>${escapeHtml(display(category.descricao))}</td>
+            <td>
+              <div class="row-actions">
+                <button class="icon-btn secondary" data-action="edit-category" data-id="${escapeHtml(category.id)}" title="Editar categoria" aria-label="Editar categoria" type="button">&#9998;</button>
+                <button class="icon-btn danger" data-action="delete-category" data-id="${escapeHtml(category.id)}" title="Excluir categoria" aria-label="Excluir categoria" type="button">&minus;</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+        $('categoryTable').innerHTML = `
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Nome</th><th>Descricao</th><th>Acoes</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      function setTab(tab) {
+        state.activeTab = tab;
+        document.querySelectorAll('.nav button').forEach((button) => {
+          button.classList.toggle('active', button.dataset.tab === tab);
+        });
+        document.querySelectorAll('.section').forEach((section) => {
+          section.classList.toggle('active', section.id === tab);
+        });
+        $('pageTitle').textContent = labels[tab][0];
+        $('pageSubtitle').textContent = labels[tab][1];
+      }
+
+      function resetTicketForm() {
+        $('ticketForm').reset();
+        $('ticketId').value = '';
+        $('ticketPriority').value = 'BAIXA';
+        $('ticketFormTitle').textContent = 'Novo chamado';
+        updateFormAvailability();
+      }
+
+      function ticketPayload() {
+        return {
+          titulo: $('ticketTitle').value.trim(),
+          descricao: $('ticketDescription').value.trim(),
+          prioridade: $('ticketPriority').value,
+          clienteId: Number($('ticketClient').value),
+          tecnicoId: Number($('ticketTechnician').value),
+          categoriaId: Number($('ticketCategory').value)
+        };
+      }
+
+      function editTicket(id) {
+        const ticket = state.chamados.find((item) => String(item.id) === String(id));
+        if (!ticket) return;
+        setTab('tickets');
+        $('ticketId').value = ticket.id;
+        $('ticketTitle').value = ticket.titulo || '';
+        $('ticketDescription').value = ticket.descricao || '';
+        $('ticketPriority').value = ticket.prioridade || 'BAIXA';
+        $('ticketClient').value = ticket.clienteId || '';
+        $('ticketTechnician').value = ticket.tecnicoId || '';
+        $('ticketCategory').value = ticket.categoriaId || '';
+        $('ticketFormTitle').textContent = `Editar chamado #${ticket.id}`;
+        updateFormAvailability();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      async function saveTicket(event) {
+        event.preventDefault();
+        const id = $('ticketId').value;
+        const method = id ? 'PUT' : 'POST';
+        const path = id ? `/chamados/${id}` : '/chamados';
+
+        try {
+          await api(path, { method, body: JSON.stringify(ticketPayload()) });
+          resetTicketForm();
+          await loadAll();
+          notice(id ? 'Chamado atualizado.' : 'Chamado criado.', 'ok');
+        } catch (error) {
+          notice(explainError(error), 'error');
+        }
+      }
+
+      function resetCommentForm() {
+        $('commentForm').reset();
+        $('commentId').value = '';
+        $('commentFormTitle').textContent = 'Novo comentario';
+        updateFormAvailability();
+      }
+
+      function commentPayload() {
+        return {
+          mensagem: $('commentMessage').value.trim(),
+          chamadosId: Number($('commentTicket').value),
+          usuarioId: Number($('commentUser').value)
+        };
+      }
+
+      function editComment(id) {
+        const comment = state.comentarios.find((item) => String(item.id) === String(id));
+        if (!comment) return;
+        setTab('comments');
+        $('commentId').value = comment.id;
+        $('commentTicket').value = comment.chamadoId || comment.chamadosId || '';
+        $('commentUser').value = comment.usuarioId || '';
+        $('commentMessage').value = comment.mensagem || '';
+        $('commentFormTitle').textContent = `Editar comentario #${comment.id}`;
+        updateFormAvailability();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      async function saveComment(event) {
+        event.preventDefault();
+        const id = $('commentId').value;
+        const method = id ? 'PUT' : 'POST';
+        const path = id ? `/comentarios/${id}` : '/comentarios';
+
+        try {
+          await api(path, { method, body: JSON.stringify(commentPayload()) });
+          resetCommentForm();
+          await loadAll();
+          notice(id ? 'Comentario atualizado.' : 'Comentario criado.', 'ok');
+        } catch (error) {
+          notice(explainError(error), 'error');
+        }
+      }
+
+      function resetUserForm() {
+        $('userForm').reset();
+        $('userId').value = '';
+        $('userRole').value = 'CLIENTE';
+        $('userFormTitle').textContent = 'Novo usuario';
+        $('userSubmit').textContent = 'Salvar usuario';
+      }
+
+      function userPayload() {
+        return {
+          nome: $('userName').value.trim(),
+          email: $('userEmail').value.trim(),
+          senha: $('userPassword').value,
+          role: $('userRole').value
+        };
+      }
+
+      function editUser(id) {
+        const user = state.usuarios.find((item) => String(item.id) === String(id));
+        if (!user) return;
+        setTab('users');
+        $('userId').value = user.id;
+        $('userName').value = user.nome || '';
+        $('userEmail').value = user.email || '';
+        $('userPassword').value = '';
+        $('userRole').value = user.role || 'CLIENTE';
+        $('userFormTitle').textContent = `Editar usuario #${user.id}`;
+        $('userSubmit').textContent = 'Atualizar usuario';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      async function saveUser(event) {
+        event.preventDefault();
+        const id = $('userId').value;
+        const method = id ? 'PUT' : 'POST';
+        const path = id ? `/usuarios/${id}` : '/usuarios';
+
+        try {
+          await api(path, { method, body: JSON.stringify(userPayload()) });
+          resetUserForm();
+          await loadAll();
+          notice(id ? 'Usuario atualizado.' : 'Usuario criado.', 'ok');
+        } catch (error) {
+          notice(explainError(error), 'error');
+        }
+      }
+
+      function resetCategoryForm() {
+        $('categoryForm').reset();
+        $('categoryId').value = '';
+        $('categoryFormTitle').textContent = 'Nova categoria';
+        $('categorySubmit').textContent = 'Salvar categoria';
+      }
+
+      function categoryPayload() {
+        return {
+          nome: $('categoryName').value.trim(),
+          descricao: $('categoryDescription').value.trim()
+        };
+      }
+
+      function editCategory(id) {
+        const category = state.categorias.find((item) => String(item.id) === String(id));
+        if (!category) return;
+        setTab('categories');
+        $('categoryId').value = category.id;
+        $('categoryName').value = category.nome || '';
+        $('categoryDescription').value = category.descricao || '';
+        $('categoryFormTitle').textContent = `Editar categoria #${category.id}`;
+        $('categorySubmit').textContent = 'Atualizar categoria';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      async function saveCategory(event) {
+        event.preventDefault();
+        const id = $('categoryId').value;
+        const method = id ? 'PUT' : 'POST';
+        const path = id ? `/categorias/${id}` : '/categorias';
+
+        try {
+          await api(path, { method, body: JSON.stringify(categoryPayload()) });
+          resetCategoryForm();
+          await loadAll();
+          notice(id ? 'Categoria atualizada.' : 'Categoria criada.', 'ok');
+        } catch (error) {
+          notice(explainError(error), 'error');
+        }
+      }
+
+      async function removeResource(path, message) {
+        if (!window.confirm('Confirmar exclusao?')) {
+          return;
+        }
+
+        try {
+          await api(path, { method: 'DELETE' });
+          await loadAll();
+          notice(message, 'ok');
+        } catch (error) {
+          notice(explainError(error), 'error');
+        }
+      }
+
+      async function toggleTicket(id, status) {
+        const action = status === 'FECHADO' ? 'abrir' : 'fechar';
+        try {
+          await api(`/chamados/${id}/${action}`, { method: 'PATCH' });
+          await loadAll();
+          notice(action === 'abrir' ? 'Chamado aberto.' : 'Chamado fechado.', 'ok');
+        } catch (error) {
+          notice(explainError(error), 'error');
+        }
+      }
+
+      async function login(event) {
+        event.preventDefault();
+        try {
+          const response = await api('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({
+              email: $('loginEmail').value.trim(),
+              senha: $('loginPassword').value
+            })
+          });
+          state.token = response && response.token ? response.token : '';
+          localStorage.setItem('helpdeskToken', state.token);
+          renderAuth();
+          notice('Login realizado. O token sera usado nas proximas acoes.', 'ok');
+        } catch (error) {
+          notice(explainError(error), 'error');
+        }
+      }
+
+      async function checkMe() {
+        try {
+          const response = await api('/auth/me');
+          state.authEmail = response && response.email ? response.email : '';
+          renderAuth();
+          notice(state.authEmail ? `Autenticado como ${state.authEmail}.` : 'Token validado.', 'ok');
+        } catch (error) {
+          state.authEmail = '';
+          renderAuth();
+          notice(explainError(error), 'error');
+        }
+      }
+
+      function logout() {
+        state.token = '';
+        state.authEmail = '';
+        localStorage.removeItem('helpdeskToken');
+        renderAuth();
+        notice('Token removido.', 'ok');
+      }
+
+      document.querySelectorAll('.nav button').forEach((button) => {
+        button.addEventListener('click', () => setTab(button.dataset.tab));
+      });
+
+      $('applyApiBase').addEventListener('click', () => {
+        state.apiBase = $('apiBase').value.trim() || defaultApiBase;
+        localStorage.setItem('helpdeskApiBase', state.apiBase);
+        loadAll();
+      });
+
+      $('refreshAll').addEventListener('click', loadAll);
+      $('goNewTicket').addEventListener('click', () => {
+        resetTicketForm();
+        setTab('tickets');
+      });
+      $('closeNotice').addEventListener('click', clearNotice);
+
+      $('ticketForm').addEventListener('submit', saveTicket);
+      $('commentForm').addEventListener('submit', saveComment);
+      $('userForm').addEventListener('submit', saveUser);
+      $('categoryForm').addEventListener('submit', saveCategory);
+      $('loginForm').addEventListener('submit', login);
+
+      $('clearTicket').addEventListener('click', resetTicketForm);
+      $('clearComment').addEventListener('click', resetCommentForm);
+      $('clearUser').addEventListener('click', resetUserForm);
+      $('clearCategory').addEventListener('click', resetCategoryForm);
+      $('clearAuth').addEventListener('click', logout);
+      $('checkMe').addEventListener('click', checkMe);
+
+      ['ticketSearch', 'ticketStatus'].forEach((id) => $(id).addEventListener('input', renderTickets));
+      ['commentSearch', 'commentTicketFilter'].forEach((id) => $(id).addEventListener('input', renderComments));
+      ['userSearch', 'userRoleFilter'].forEach((id) => $(id).addEventListener('input', renderUsers));
+      $('categorySearch').addEventListener('input', renderCategories);
+      $('clearCategorySearch').addEventListener('click', () => {
+        $('categorySearch').value = '';
+        renderCategories();
+      });
+
+      document.body.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const id = button.dataset.id;
+        const action = button.dataset.action;
+
+        if (action === 'edit-ticket') editTicket(id);
+        if (action === 'delete-ticket') removeResource(`/chamados/${id}`, 'Chamado excluido.');
+        if (action === 'toggle-ticket') toggleTicket(id, button.dataset.status);
+        if (action === 'edit-comment') editComment(id);
+        if (action === 'delete-comment') removeResource(`/comentarios/${id}`, 'Comentario excluido.');
+        if (action === 'edit-user') editUser(id);
+        if (action === 'delete-user') removeResource(`/usuarios/${id}`, 'Usuario excluido.');
+        if (action === 'edit-category') editCategory(id);
+        if (action === 'delete-category') removeResource(`/categorias/${id}`, 'Categoria excluida.');
+      });
+
+      renderAll();
+      loadAll();
+    })();
+  </script>
+</body>
+</html>
